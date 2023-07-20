@@ -1,0 +1,47 @@
+# Importing the blank English model
+import spacy
+nlp = spacy.blank('en')
+
+TRAINING_DATA = [
+ 
+  ('Linkedin is the most powerful place for networking.', 
+  
+   {'entities': [(0, 8, 'WEBSITE')]}),
+ 
+  ('Ram has a very attractive profile on Linkedin.', 
+  
+   {'entities': [(0,3, 'PERSON'), (37, 45, 'WEBSITE')]}),
+ 
+  ('Ram recently published a Machine Learning course on Linkedin Learning.', 
+  
+   {'entities': [(52, 60, 'WEBSITE'), (0,3, 'PERSON')]})
+
+]
+
+# Creating a new entity recogniser and adding it to the pipeline
+
+ner = nlp.create_pipe('ner')
+
+nlp.add_pipe(ner)
+
+# Adding the label Gadget to the entity recogniser
+
+ner.add_label('GADGET')
+
+nlp.begin_training() # Starting the training
+
+for i in range(10): # Looping for 10 iterations
+
+  random.shuffle(TRAINING_DATA) # shuffling
+
+  losses = {} # Implementing batch processing
+
+  for batch in spacy.util.minibatch(TRAINING_DATA, size=2):
+
+    texts = [text for text, entities in batch]
+
+    annotations = [annotations for text, entities in batch]
+
+    nlp.update(texts, annotations , losses=losses) # updating the model
+
+    print(losses)
